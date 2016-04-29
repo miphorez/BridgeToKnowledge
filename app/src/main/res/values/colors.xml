@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#466D89</color>
+    <color name="colorPrimaryDark">#003965</color>
+    <color name="colorAccent">#8DA1AD</color>
+    <color name="colorBookBlueDeep">#003965</color>
+    <color name="colorBookBlue">#466D89</color>
+    <color name="colorBookBlueLight">#8DA1AD</color>
+    <color name="transparent70">#80000000</color>
+</resources>

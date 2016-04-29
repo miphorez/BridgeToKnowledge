@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="apk" name="BridgeToKnowledge">
+    <output-path>$PROJECT_DIR$/build/classes/artifacts/BridgeToKnowledge</output-path>
+    <properties id="android-properties">
+      <options>
+        <option name="keyStoreUrl" value="file://" />
+      </options>
+    </properties>
+    <root id="archive" name="BridgeToKnowledge.apk">
+      <element id="module-output" name="app" />
+    </root>
+  </artifact>
+</component>

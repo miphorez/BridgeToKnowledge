@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Мост к Знанию</string>
+
+    <string name="navigation_drawer_open">Открыть оглавление</string>
+    <string name="navigation_drawer_close">Закрыть оглавление</string>
+
+    <string name="app_title">Мост к Знанию</string>
+    <string name="content">Содержание</string>
+    <string name="empty">...</string>
+    <string name="foreword">Предисловие</string>
+    <string name="part1">Глава 1</string>
+    <string name="part2">Глава 2</string>
+    <string name="part3">Глава 3</string>
+    <string name="part4">Глава 4</string>
+    <string name="part5">Глава 5</string>
+
+    <string name="action_share">Поделиться</string>
+    <string name="action_shrift_up">Увеличить размер шрифта</string>
+    <string name="action_shrift_down">Уменьшить размер шрифта</string>
+    <string name="action_about">О программе</string>
+    <string name="about_version">Версия программы: 1.0</string>
+    <string name="action_arrow_right">Переход к следующему фрагменту текста</string>
+    <string name="action_arrow_left">Переход к предыдущему фрагменту текста</string>
+    <string name="endbook">Закрыть книгу</string>
+</resources>
