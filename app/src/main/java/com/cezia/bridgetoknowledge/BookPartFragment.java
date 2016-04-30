@@ -95,10 +95,6 @@ public class BookPartFragment extends Fragment {
         return partId;
     }
 
-    int getMaxBookPartId() {
-        return BookPart.MAX_NUM_PART;
-    }
-
     boolean isFlRestoreView() {
         return flRestoreView;
     }

@@ -151,12 +151,27 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.fragment_book_container, partFragment);
 //        if (modeStack) transaction.addToBackStack(null);
         transaction.commit();
+        hideShowButtons(lastPart);
+    }
+
+    private void hideShowButtons(int lastPart) {
+        FloatingActionButton btn;
+        btn = (FloatingActionButton) findViewById(R.id.arrow_left);
+        if (btn != null) {
+            if (lastPart == 0) btn.hide();
+            else btn.show();
+        }
+        btn = (FloatingActionButton) findViewById(R.id.arrow_right);
+        if (btn != null) {
+            if (lastPart == BookPart.MAX_NUM_PART) btn.hide();
+            else btn.show();
+        }
     }
 
     private void setNextPartBookTransaction() {
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         long numPart = partFragment.getBookPartId();
-        if (numPart != partFragment.getMaxBookPartId()) {
+        if (numPart != BookPart.MAX_NUM_PART) {
             numPart++;
             setPartBookTransaction((int) numPart, true, false);
         }
