@@ -121,4 +121,7 @@ public class BookPartFragment extends Fragment {
         return scrollView;
     }
 
+    BookPart getItemBookPart() {
+        return BookPart.parts[(int) partId];
+    }
 }

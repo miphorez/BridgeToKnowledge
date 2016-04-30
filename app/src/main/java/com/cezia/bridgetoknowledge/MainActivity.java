@@ -1,9 +1,11 @@
 package com.cezia.bridgetoknowledge;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +19,8 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         BookPartFragment.ChangeBookPartListener {
+
+    private Menu menuMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menuMain = menu;
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         if (partFragment == null) {
             setPartBookTransaction(0, false, true);
@@ -149,7 +154,6 @@ public class MainActivity extends AppCompatActivity
         } else lastPart = numPart;
         partFragment.setBookPart(lastPart, modeRestore);
         transaction.replace(R.id.fragment_book_container, partFragment);
-//        if (modeStack) transaction.addToBackStack(null);
         transaction.commit();
         hideShowButtons(lastPart);
     }
@@ -215,37 +219,23 @@ public class MainActivity extends AppCompatActivity
             //после поворота экрана оставить прежний интент
             BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
             if (partFragment.isFlRestoreView()) {
-//                resetStackActivity();
                 partFragment.setFlRestoreView(false);
                 return;
             }
-//            changeIntentMenuShare();
+            changeIntentMenuShare();
         }
     }
 
-    private void resetStackActivity() {
-//        while (getSupportFragmentManager().getBackStackEntryCount() > 0){
-//            getSupportFragmentManager().popBackStackImmediate();
-//        }
-        FragmentManager manager = getSupportFragmentManager();
-        int cnt = manager.getBackStackEntryCount();
-        if (cnt > 0) {
-            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(cnt - 1);
-            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
+    private void changeIntentMenuShare() {
+        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
+        BookPart bookPart = partFragment.getItemBookPart();
+        MenuItem shareItem = menuMain.findItem(R.id.action_share);
+        ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, bookPart.getText());
+        shareActionProvider.setShareIntent(intent);
     }
-
-//    private void changeIntentMenuShare() {
-//        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-//        BookPart bookPart = partFragment.getItemBookPart();
-//        MenuItem shareItem = menuMain.findItem(R.id.action_share);
-//        ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-//        Intent intent = new Intent(Intent.ACTION_SEND);
-//        intent.setType("text/plain");
-//        intent.putExtra(Intent.EXTRA_TEXT, bookPart.getText());
-//        shareActionProvider.setShareIntent(intent);
-//    }
 
     @Override
     protected void onPause() {
