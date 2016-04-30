@@ -1,7 +1,5 @@
 package com.cezia.bridgetoknowledge;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -15,9 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ScrollView;
-
-import static com.cezia.bridgetoknowledge.BookPartFragment.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -150,7 +145,7 @@ public class MainActivity extends AppCompatActivity
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         int lastPart;
         if (!modeStack) {
-            lastPart = (int) loadPrefLastPart();
+            lastPart = (int) BookPartPosition.loadPrefLastPart(getApplicationContext());
         } else lastPart = numPart;
         partFragment.setBookPart(lastPart, modeRestore);
         transaction.replace(R.id.fragment_book_container, partFragment);
@@ -237,28 +232,11 @@ public class MainActivity extends AppCompatActivity
 //        shareActionProvider.setShareIntent(intent);
 //    }
 
-    private long loadPrefLastPart() {
-        long lastPart = PREF_LAST_PART;
-        SharedPreferences prefSettings = getSharedPreferences(BookPartFont.APP_PREFERENCES, Context.MODE_PRIVATE);
-        if (prefSettings.contains(APP_PREFERENCES_LAST_PART)) {
-            lastPart = prefSettings.getLong(APP_PREFERENCES_LAST_PART, PREF_LAST_PART);
-        }
-        return lastPart;
-    }
-
-    private void savePrefLastPartPosition() {
-        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        ScrollView scrollView = partFragment.getScrollViewBookPart();
-        SharedPreferences prefSettings = getSharedPreferences(BookPartFont.APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefSettings.edit();
-        editor.putInt(APP_PREFERENCES_LAST_PART_POSITION, scrollView.getScrollY());
-        editor.commit();
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
-        savePrefLastPartPosition();
+        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
+        partFragment.positionBookPart.savePrefLastPartPosition();
     }
 
     private void onExitApp() {

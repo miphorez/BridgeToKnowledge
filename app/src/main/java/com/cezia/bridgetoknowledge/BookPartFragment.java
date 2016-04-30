@@ -1,7 +1,6 @@
 package com.cezia.bridgetoknowledge;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,12 +17,7 @@ public class BookPartFragment extends Fragment {
     private int lastBookPosition;
 
     BookPartFont fontBookPart;
-
-    static final String APP_PREFERENCES_LAST_PART = "lastpart";
-    static final long PREF_LAST_PART = 0;
-
-    static final String APP_PREFERENCES_LAST_PART_POSITION = "lastpartposition";
-    private static final int PREF_LAST_PART_POSITION = 0;
+    BookPartPosition positionBookPart;
 
     interface ChangeBookPartListener {
         void changeBookPart(long id);
@@ -52,7 +46,8 @@ public class BookPartFragment extends Fragment {
         if (textView != null) {
             BookPart bookPart = BookPart.parts[(int) partId];
             textView.setText(bookPart.getText());
-            fontBookPart = new BookPartFont(getContext(), textView);
+            fontBookPart = new BookPartFont(getContext(), getTextViewBookPart());
+            positionBookPart = new BookPartPosition(getContext(), getScrollViewBookPart());
         }
     }
 
@@ -67,7 +62,7 @@ public class BookPartFragment extends Fragment {
         }
         //восстановить позицию в тексте
         if (flRestoreMode) {
-            loadPrefLastBookPosition();
+            lastBookPosition = positionBookPart.loadPrefLastBookPosition();
             final ScrollView scrollView = getScrollViewBookPart();
             scrollView.post(new Runnable() {
                 @Override
@@ -79,25 +74,8 @@ public class BookPartFragment extends Fragment {
         flRestoreMode = true;
     }
 
-    private void savePrefLastPart(long lastPart) {
-        Context context = getContext();
-        SharedPreferences prefSettings = context.getSharedPreferences(BookPartFont.APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefSettings.edit();
-        editor.putLong(APP_PREFERENCES_LAST_PART, lastPart);
-        editor.commit();
-    }
-
-    private int loadPrefLastBookPosition(){
-        Context context = getContext();
-        SharedPreferences prefSettings = context.getSharedPreferences(BookPartFont.APP_PREFERENCES, Context.MODE_PRIVATE);
-        if (prefSettings.contains(APP_PREFERENCES_LAST_PART_POSITION)) {
-            lastBookPosition = prefSettings.getInt(APP_PREFERENCES_LAST_PART_POSITION, PREF_LAST_PART_POSITION);
-        }
-        return lastBookPosition;
-    }
-
     private void changeBookPartForListener(long id) {
-        savePrefLastPart(id);
+        positionBookPart.savePrefLastPart(id);
         Context context = getContext();
         ChangeBookPartListener listener = (ChangeBookPartListener) context;
         View view = getView();
@@ -138,7 +116,7 @@ public class BookPartFragment extends Fragment {
         return textView;
     }
 
-    ScrollView getScrollViewBookPart() {
+    private ScrollView getScrollViewBookPart() {
         ScrollView scrollView = null;
         View view = getView();
         if (view != null) {

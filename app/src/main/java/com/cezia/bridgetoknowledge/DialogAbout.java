@@ -8,9 +8,9 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
-public class DialogAbout {
+class DialogAbout {
 
-    public DialogAbout(Activity activity) {
+    DialogAbout(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(R.string.action_about);
         builder.setView(inflateActivityAbout(activity));
