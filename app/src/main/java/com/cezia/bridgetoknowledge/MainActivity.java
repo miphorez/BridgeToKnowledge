@@ -2,15 +2,10 @@ package com.cezia.bridgetoknowledge;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.util.TypedValue;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,15 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import static com.cezia.bridgetoknowledge.BookPartFragment.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         BookPartFragment.ChangeBookPartListener {
-
-    private Menu menuMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +79,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menuMain = menu;
         getMenuInflater().inflate(R.menu.menu_main, menu);
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         if (partFragment == null) {
@@ -99,12 +90,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //действия по кнопкам инструментальной панели
+        BookPartFragment bookPartFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         switch (item.getItemId()) {
             case R.id.action_shrift_up:
-                sizeFontUp();
+                bookPartFragment.fontBookPart.sizeFontUp();
                 return true;
             case R.id.action_shrift_down:
-                sizeFontDown();
+                bookPartFragment.fontBookPart.sizeFontDown();
                 return true;
             case R.id.action_about:
                 new DialogAbout(this);
@@ -116,22 +108,6 @@ public class MainActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void sizeFontUp() {
-        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        TextView textView = partFragment.getTextViewBookPart();
-        float size = textView.getTextSize();
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, ++size);
-        partFragment.savePrefFontSize(size);
-    }
-
-    private void sizeFontDown() {
-        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        TextView textView = partFragment.getTextViewBookPart();
-        float size = textView.getTextSize();
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, --size);
-        partFragment.savePrefFontSize(size);
     }
 
     @Override
@@ -263,7 +239,7 @@ public class MainActivity extends AppCompatActivity
 
     private long loadPrefLastPart() {
         long lastPart = PREF_LAST_PART;
-        SharedPreferences prefSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefSettings = getSharedPreferences(BookPartFont.APP_PREFERENCES, Context.MODE_PRIVATE);
         if (prefSettings.contains(APP_PREFERENCES_LAST_PART)) {
             lastPart = prefSettings.getLong(APP_PREFERENCES_LAST_PART, PREF_LAST_PART);
         }
@@ -273,7 +249,7 @@ public class MainActivity extends AppCompatActivity
     private void savePrefLastPartPosition() {
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         ScrollView scrollView = partFragment.getScrollViewBookPart();
-        SharedPreferences prefSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences prefSettings = getSharedPreferences(BookPartFont.APP_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefSettings.edit();
         editor.putInt(APP_PREFERENCES_LAST_PART_POSITION, scrollView.getScrollY());
         editor.commit();
