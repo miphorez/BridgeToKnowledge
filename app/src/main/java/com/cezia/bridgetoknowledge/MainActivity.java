@@ -1,14 +1,15 @@
 package com.cezia.bridgetoknowledge;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.ShareActionProvider;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,14 +22,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import static com.cezia.bridgetoknowledge.BookPartFragment.*;
 
 public class MainActivity extends AppCompatActivity
-        implements  NavigationView.OnNavigationItemSelectedListener,
-                    BookPartFragment.ChangeBookPartListener
-{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        BookPartFragment.ChangeBookPartListener {
 
     private Menu menuMain;
 
@@ -108,10 +107,8 @@ public class MainActivity extends AppCompatActivity
                 sizeFontDown();
                 return true;
             case R.id.action_about:
-//                BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-//                long partId = partFragment.getBookPartId();
-//                Toast.makeText(getApplicationContext(), "partId: "+Integer.toString((int)partId), Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), R.string.about_version, Toast.LENGTH_LONG).show();
+                new DialogAbout(this);
+//        Toast.makeText(getApplicationContext(), R.string.about_version, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_endbook:
                 onExitApp();
@@ -176,7 +173,7 @@ public class MainActivity extends AppCompatActivity
         BookPartFragment partFragment = new BookPartFragment();
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         int lastPart;
-        if (!modeStack){
+        if (!modeStack) {
             lastPart = (int) loadPrefLastPart();
         } else lastPart = numPart;
         partFragment.setBookPart(lastPart, modeRestore);
@@ -247,7 +244,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         int cnt = manager.getBackStackEntryCount();
         if (cnt > 0) {
-            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(cnt-1);
+            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(cnt - 1);
             manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 //            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
@@ -264,7 +261,7 @@ public class MainActivity extends AppCompatActivity
 //        shareActionProvider.setShareIntent(intent);
 //    }
 
-    private long loadPrefLastPart(){
+    private long loadPrefLastPart() {
         long lastPart = PREF_LAST_PART;
         SharedPreferences prefSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         if (prefSettings.contains(APP_PREFERENCES_LAST_PART)) {
@@ -273,7 +270,7 @@ public class MainActivity extends AppCompatActivity
         return lastPart;
     }
 
-    private void savePrefLastPartPosition(){
+    private void savePrefLastPartPosition() {
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         ScrollView scrollView = partFragment.getScrollViewBookPart();
         SharedPreferences prefSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);

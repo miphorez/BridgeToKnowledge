@@ -5,8 +5,8 @@
     <string name="navigation_drawer_close">Закрыть оглавление</string>
 
     <string name="app_title">Мост к Знанию</string>
+    <string name="app_mail">ceziawaiting@gmail.com</string>
     <string name="content">Содержание</string>
-    <string name="empty">...</string>
     <string name="foreword">Предисловие</string>
     <string name="part1">Глава 1</string>
     <string name="part2">Глава 2</string>
@@ -18,8 +18,18 @@
     <string name="action_shrift_up">Увеличить размер шрифта</string>
     <string name="action_shrift_down">Уменьшить размер шрифта</string>
     <string name="action_about">О программе</string>
-    <string name="about_version">Версия программы: 1.0</string>
     <string name="action_arrow_right">Переход к следующему фрагменту текста</string>
     <string name="action_arrow_left">Переход к предыдущему фрагменту текста</string>
     <string name="endbook">Закрыть книгу</string>
+
+    <string name="btk_link_to_mail">[!CDATA[<html>Контактный адрес: <a href="mailto:ceziawaiting@gmail.com">ceziawaiting@gmail.com</a></html>]]</string>
+    <string name="btk_link_to_site">[!CDATA[<html>Ссылка на оригинальный сайт: <a href="https://sites.google.com/site/raytoknowbridge/">Мост к Знанию</a></html>]]</string>
+
+    <string name="app_description">
+        Приложение "Мост к Знанию" представляет собой электронную книгу-сборник
+        эзотерических текстов, относящихся к области живой этики самопознания и
+        самосовершенствования. Цель их - расширить сознание человека и способствовать
+        его дальнейшему духовному росту.\nТексты были получены методом телепатии и радиэстезии.
+    </string>
+
 </resources>

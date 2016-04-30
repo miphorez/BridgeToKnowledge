@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:src="@drawable/ic_btk_white_48"
-            android:id="@+id/imageView"/>
+            android:id="@+id/imageView"
+            android:contentDescription="@string/app_name"/>
 
     <TextView
             android:layout_width="match_parent"
@@ -28,7 +29,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ceziawaiting@gmail.com"
+            android:text="@string/app_mail"
             android:id="@+id/textView"/>
 
 </LinearLayout>
