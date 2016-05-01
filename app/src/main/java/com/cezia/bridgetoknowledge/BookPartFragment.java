@@ -10,7 +10,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class BookPartFragment extends Fragment {
-    private long partId;
+    private BookMark bookMark;
     private boolean flRestoreView;
     private boolean flRestoreMode = true;
 
@@ -20,7 +20,7 @@ public class BookPartFragment extends Fragment {
     BookPartPosition positionBookPart;
 
     interface ChangeBookPartListener {
-        void changeBookPart(long id);
+        void changeBookPart(BookMark bookMark);
     }
 
     @Override
@@ -28,7 +28,8 @@ public class BookPartFragment extends Fragment {
                              Bundle savedInstanceState) {
         flRestoreView = false;
         if (savedInstanceState != null) {
-            partId = savedInstanceState.getLong("partId");
+            bookMark.setNumPart(savedInstanceState.getInt("numPart"));
+            bookMark.setNumFragment(savedInstanceState.getInt("numFragment"));
             flRestoreView = true;
         }
         return inflater.inflate(R.layout.fragment_book_part, container, false);
@@ -36,7 +37,8 @@ public class BookPartFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putLong("partId", partId);
+        outState.putInt("numPart", bookMark.getNumPart());
+        outState.putInt("numFragment", bookMark.getNumFragment());
     }
 
     @Override
@@ -44,8 +46,7 @@ public class BookPartFragment extends Fragment {
         super.onStart();
         TextView textView = getTextViewBookPart();
         if (textView != null) {
-            BookPart bookPart = BookPart.parts[(int) partId];
-            textView.setText(bookPart.getText());
+            textView.setText(EBookPart.getTextBookPart(getContext(), bookMark));
             fontBookPart = new BookPartFont(getContext(), getTextViewBookPart());
             positionBookPart = new BookPartPosition(getContext(), getScrollViewBookPart());
         }
@@ -54,7 +55,7 @@ public class BookPartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        changeBookPartForListener(partId);
+        changeBookPartForListener(bookMark);
         //восстановить размер текста
         TextView textView = getTextViewBookPart();
         if (textView != null) {
@@ -74,25 +75,25 @@ public class BookPartFragment extends Fragment {
         flRestoreMode = true;
     }
 
-    private void changeBookPartForListener(long id) {
-        positionBookPart.savePrefLastPart(id);
+    private void changeBookPartForListener(BookMark bookMark) {
+        positionBookPart.savePrefLastPart(bookMark);
         Context context = getContext();
         ChangeBookPartListener listener = (ChangeBookPartListener) context;
         View view = getView();
         if (view != null) {
             if (listener != null) {
-                listener.changeBookPart(id);
+                listener.changeBookPart(bookMark);
             }
         }
     }
 
-    void setBookPart(long id, boolean modeRestore) {
-        this.partId = id;
+    void setBookPart(BookMark bookMark, boolean modeRestore) {
+        this.bookMark = new BookMark(bookMark);
         this.flRestoreMode = modeRestore;
     }
 
-    long getBookPartId() {
-        return partId;
+    BookMark getBookMark() {
+        return bookMark;
     }
 
     boolean isFlRestoreView() {
@@ -121,7 +122,7 @@ public class BookPartFragment extends Fragment {
         return scrollView;
     }
 
-    BookPart getItemBookPart() {
-        return BookPart.parts[(int) partId];
+    String getBookPartText() {
+        return getTextViewBookPart().getText().toString();
     }
 }

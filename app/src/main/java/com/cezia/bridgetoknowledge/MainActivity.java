@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         menuMain = menu;
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         if (partFragment == null) {
-            setPartBookTransaction(0, false, true);
+            setPartBookTransaction(EBookPart.getFirstBookPart(), false, true);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -138,62 +138,80 @@ public class MainActivity extends AppCompatActivity
                 onExitApp();
                 break;
         }
-        setPartBookTransaction(numPart, true, false);
+        setPartBookTransaction(new BookMark(numPart, 1), true, false);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void setPartBookTransaction(int numPart, boolean modeStack, boolean modeRestore) {
+    private void setPartBookTransaction(BookMark bookMark, boolean modeStack, boolean modeRestore) {
         BookPartFragment partFragment = new BookPartFragment();
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        int lastPart;
+        BookMark lastBookMark;
         if (!modeStack) {
-            lastPart = (int) BookPartPosition.loadPrefLastPart(getApplicationContext());
-        } else lastPart = numPart;
-        partFragment.setBookPart(lastPart, modeRestore);
+            lastBookMark = BookPartPosition.loadPrefLastPart(getApplicationContext());
+        }
+        else lastBookMark = bookMark;
+        partFragment.setBookPart(lastBookMark, modeRestore);
         transaction.replace(R.id.fragment_book_container, partFragment);
         transaction.commit();
-        hideShowButtons(lastPart);
+        hideShowButtons(lastBookMark);
     }
 
-    private void hideShowButtons(int lastPart) {
+    private void hideShowButtons(BookMark bookMark) {
         FloatingActionButton btn;
         btn = (FloatingActionButton) findViewById(R.id.arrow_left);
         if (btn != null) {
-            if (lastPart == 0) btn.hide();
+            if (bookMark.getNumPart() == 0) btn.hide();
             else btn.show();
         }
         btn = (FloatingActionButton) findViewById(R.id.arrow_right);
         if (btn != null) {
-            if (lastPart == BookPart.MAX_NUM_PART) btn.hide();
+            if (EBookPart.isLastBookPart(bookMark)) btn.hide();
             else btn.show();
         }
     }
 
     private void setNextPartBookTransaction() {
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        long numPart = partFragment.getBookPartId();
-        if (numPart != BookPart.MAX_NUM_PART) {
-            numPart++;
-            setPartBookTransaction((int) numPart, true, false);
-        }
+        BookMark bookMark = partFragment.getBookMark();
+        bookMark = EBookPart.getNextBookMark(bookMark);
+        setPartBookTransaction(bookMark, true, false);
     }
 
     private void setPrevPartBookTransaction() {
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        long numPart = partFragment.getBookPartId();
-        if (numPart != 0) {
-            numPart--;
-            setPartBookTransaction((int) numPart, true, false);
-        }
+        BookMark bookMark = partFragment.getBookMark();
+        bookMark = EBookPart.getPrevBookMark(bookMark);
+        setPartBookTransaction(bookMark, true, false);
+    }
+
+    private void changeIntentMenuShare() {
+        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
+        MenuItem shareItem = menuMain.findItem(R.id.action_share);
+        ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, partFragment.getBookPartText());
+        shareActionProvider.setShareIntent(intent);
     }
 
     @Override
-    public void changeBookPart(long id) {
+    protected void onPause() {
+        super.onPause();
+        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
+        partFragment.positionBookPart.savePrefLastPartPosition();
+    }
+
+    private void onExitApp() {
+        this.finish();
+    }
+
+    @Override
+    public void changeBookPart(BookMark bookMark) {
         int idStr = 0;
-        switch ((int) id) {
+        switch (bookMark.getNumPart()) {
             case 0:
                 idStr = R.string.foreword;
                 break;
@@ -224,27 +242,5 @@ public class MainActivity extends AppCompatActivity
             }
             changeIntentMenuShare();
         }
-    }
-
-    private void changeIntentMenuShare() {
-        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        BookPart bookPart = partFragment.getItemBookPart();
-        MenuItem shareItem = menuMain.findItem(R.id.action_share);
-        ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, bookPart.getText());
-        shareActionProvider.setShareIntent(intent);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        partFragment.positionBookPart.savePrefLastPartPosition();
-    }
-
-    private void onExitApp() {
-        this.finish();
     }
 }
