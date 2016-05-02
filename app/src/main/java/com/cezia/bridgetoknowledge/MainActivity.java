@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         BookMark lastBookMark;
         if (!modeStack) {
-            lastBookMark = BookPartPosition.loadPrefLastPart(getApplicationContext());
+            lastBookMark = new BookMark(BookPartPosition.loadPrefLastPart(getApplicationContext()));
         }
-        else lastBookMark = bookMark;
+        else lastBookMark = new BookMark(bookMark);
         partFragment.setBookPart(lastBookMark, modeRestore);
         transaction.replace(R.id.fragment_book_container, partFragment);
         transaction.commit();
@@ -185,16 +185,6 @@ public class MainActivity extends AppCompatActivity
         BookMark bookMark = partFragment.getBookMark();
         bookMark = EBookPart.getPrevBookMark(bookMark);
         setPartBookTransaction(bookMark, true, false);
-    }
-
-    private void changeIntentMenuShare() {
-        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
-        MenuItem shareItem = menuMain.findItem(R.id.action_share);
-        ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, partFragment.getBookPartText());
-        shareActionProvider.setShareIntent(intent);
     }
 
     @Override
@@ -242,5 +232,15 @@ public class MainActivity extends AppCompatActivity
             }
             changeIntentMenuShare();
         }
+    }
+
+    private void changeIntentMenuShare() {
+        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
+        MenuItem shareItem = menuMain.findItem(R.id.action_share);
+        ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, partFragment.getBookPartText());
+        shareActionProvider.setShareIntent(intent);
     }
 }

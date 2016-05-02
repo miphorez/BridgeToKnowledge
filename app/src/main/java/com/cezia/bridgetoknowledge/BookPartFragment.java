@@ -10,12 +10,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class BookPartFragment extends Fragment {
-    private BookMark bookMark;
     private boolean flRestoreView;
     private boolean flRestoreMode = true;
 
     private int lastBookPosition;
 
+    private BookMark bookMark;
     BookPartFont fontBookPart;
     BookPartPosition positionBookPart;
 
@@ -28,6 +28,7 @@ public class BookPartFragment extends Fragment {
                              Bundle savedInstanceState) {
         flRestoreView = false;
         if (savedInstanceState != null) {
+            bookMark = new BookMark();
             bookMark.setNumPart(savedInstanceState.getInt("numPart"));
             bookMark.setNumFragment(savedInstanceState.getInt("numFragment"));
             flRestoreView = true;
