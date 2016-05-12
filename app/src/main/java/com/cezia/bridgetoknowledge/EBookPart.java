@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 enum EBookPart {
     PART0_001(0, 0, 1),
@@ -219,5 +220,28 @@ enum EBookPart {
 
     public static BookMark getFirstBookPart() {
         return new BookMark(0, 1);
+    }
+
+    public static String[] getListParts(Context context) {
+        int iPart = -1;
+        int cntPart = 0;
+        for (EBookPart eBookPart : values()) {
+            if (eBookPart.bookMark.getNumPart() != iPart) {
+                iPart = eBookPart.bookMark.getNumPart();
+                cntPart++;
+            }
+        }
+        String[] listParts = new String[cntPart];
+        for (EBookPart eBookPart : values()) {
+            if (eBookPart.bookMark.getNumPart() != iPart) {
+                iPart = eBookPart.bookMark.getNumPart();
+                if (iPart == 0) {
+                    listParts[iPart] = context.getResources().getString(R.string.foreword);
+                } else {
+                    listParts[iPart] = "Глава " + Integer.toString(iPart);
+                }
+            }
+        }
+        return listParts;
     }
 }

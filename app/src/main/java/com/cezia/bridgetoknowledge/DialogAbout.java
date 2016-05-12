@@ -12,14 +12,14 @@ class DialogAbout {
 
     DialogAbout(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(R.string.action_about);
+        builder.setTitle(R.string.dialog_about);
         builder.setView(inflateActivityAbout(activity));
-        builder.setPositiveButton("OK", null);
+        builder.setPositiveButton(R.string.btn_about_ok, null);
         builder.show();
     }
 
     private View inflateActivityAbout(Activity activity) {
-        View view = activity.getLayoutInflater().inflate(R.layout.activity_about, null);
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_about, null);
         TextView textView;
 
         //ссылка на сайт

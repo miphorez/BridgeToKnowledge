@@ -3,6 +3,7 @@ package com.cezia.bridgetoknowledge;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ShareActionProvider;
@@ -16,9 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        BookPartFragment.ChangeBookPartListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        BookPartFragment.ChangeBookPartListener,
+        DialogPartPickerTest.OnClickListener
+{
 
     private Menu menuMain;
 
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity
                 navigationView.setNavigationItemSelectedListener(this);
             }
         }
+
     }
 
     @Override
@@ -92,6 +96,9 @@ public class MainActivity extends AppCompatActivity
         //действия по кнопкам инструментальной панели
         BookPartFragment bookPartFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         switch (item.getItemId()) {
+            case R.id.action_goto_part:
+                goToDialogPart();
+                return true;
             case R.id.action_shrift_up:
                 bookPartFragment.fontBookPart.sizeFontUp();
                 return true;
@@ -108,6 +115,22 @@ public class MainActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void goToDialogPart() {
+        Bundle bundle = new Bundle();
+        String[] values1 = new String[] {"a","bb","ccc","dddd","eeeeee","fffffff"};
+//        String[] values1 = EBookPart.getListParts(getApplicationContext());
+        bundle.putStringArray(getResources().getString(R.string.string_picker_dialog_part), values1);
+        String[] values2 = new String[] {"1","22","333","4444","55555","666666"};
+        bundle.putStringArray(getResources().getString(R.string.string_picker_dialog_fragment), values2);
+        String preset1 = "bb";
+        bundle.putString(getResources().getString(R.string.string_picker_dialog_preset_part), preset1);
+        String preset2 = "55555";
+        bundle.putString(getResources().getString(R.string.string_picker_dialog_preset_fragment), preset2);
+        DialogFragment dialogPartPicker = new DialogPartPickerTest();
+        dialogPartPicker.setArguments(bundle);
+        dialogPartPicker.show(getSupportFragmentManager(),"dialogPartPicker");
     }
 
     @Override
@@ -242,5 +265,10 @@ public class MainActivity extends AppCompatActivity
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, partFragment.getBookPartText());
         shareActionProvider.setShareIntent(intent);
+    }
+
+    @Override
+    public void onClick(String strPart, String strFragment) {
+
     }
 }

@@ -11,22 +11,28 @@
           app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
     />
 
+    <item android:id="@+id/action_goto_part"
+          android:title="@string/action_goto_part"
+          android:orderInCategory="77"
+          app:showAsAction="never"
+    />
+
     <item android:id="@+id/action_shrift_up"
           android:title="@string/action_shrift_up"
           android:icon="@drawable/ic_shrift_size_up_white"
-          android:orderInCategory="2"
+          android:orderInCategory="87"
           app:showAsAction="never"
     />
 
     <item android:id="@+id/action_shrift_down"
           android:title="@string/action_shrift_down"
           android:icon="@drawable/ic_shrift_size_down_white"
-          android:orderInCategory="3"
+          android:orderInCategory="88"
           app:showAsAction="never"
     />
 
     <item android:id="@+id/action_about"
-          android:title="@string/action_about"
+          android:title="@string/dialog_about"
           android:orderInCategory="99"
           app:showAsAction="never"
     />

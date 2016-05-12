@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/content" android:checkableBehavior="single" >
+    <group
+            android:id="@+id/content"
+            android:checkableBehavior="single">
         <item
                 android:id="@+id/foreword"
                 android:icon="@drawable/ic_bookmark"
@@ -26,14 +29,14 @@
                 android:id="@+id/part5"
                 android:icon="@drawable/ic_bookmark"
                 android:title="@string/part5"/>
-     </group>
+    </group>
 
-    <group android:id="@+id/other" android:checkableBehavior="single" >
-            <item
-                    android:id="@+id/endbook"
-                    android:icon="@drawable/ic_exit_to_app_black"
-                    android:title="@string/endbook"
-            />
+    <group android:id="@+id/other" android:checkableBehavior="single">
+        <item
+                android:id="@+id/endbook"
+                android:icon="@drawable/ic_exit_to_app_black"
+                android:title="@string/endbook"
+        />
     </group>
 
 </menu>
