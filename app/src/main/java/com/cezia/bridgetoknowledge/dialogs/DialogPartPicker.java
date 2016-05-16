@@ -62,6 +62,12 @@ public class DialogPartPicker extends DialogFragment {
         return builder.create();
     }
 
+    public static DialogPartPicker newInstance(Bundle bundle) {
+        DialogPartPicker dialogPartPicker = new DialogPartPicker();
+        dialogPartPicker.setArguments(bundle);
+        return dialogPartPicker;
+    }
+
     public void setNewListFragments(String[] values) {
             StringPicker pickerFragment = (StringPicker) itemView.findViewById(R.id.fragment_picker);
             pickerFragment.setValues(values);
