@@ -16,11 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+import com.cezia.bridgetoknowledge.dialogs.DialogAbout;
+import com.cezia.bridgetoknowledge.dialogs.DialogPartPicker;
+import com.cezia.bridgetoknowledge.dialogs.StringPicker;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         BookPartFragment.ChangeBookPartListener,
-        DialogPartPickerTest.OnClickListener
+        DialogPartPicker.OnClickListener,
+        StringPicker.OnChangeOfDataOfPicker
 {
 
     private Menu menuMain;
@@ -119,16 +124,23 @@ public class MainActivity extends AppCompatActivity implements
 
     private void goToDialogPart() {
         Bundle bundle = new Bundle();
-        String[] values1 = new String[] {"a","bb","ccc","dddd","eeeeee","fffffff"};
-//        String[] values1 = EBookPart.getListParts(getApplicationContext());
+
+        BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
+        BookMark bookMark = partFragment.getBookMark();
+
+        String[] values1 = EBookPart.getListParts(getApplicationContext());
         bundle.putStringArray(getResources().getString(R.string.string_picker_dialog_part), values1);
-        String[] values2 = new String[] {"1","22","333","4444","55555","666666"};
-        bundle.putStringArray(getResources().getString(R.string.string_picker_dialog_fragment), values2);
-        String preset1 = "bb";
+
+        String preset1 = EBookPart.getStrPart(bookMark);
         bundle.putString(getResources().getString(R.string.string_picker_dialog_preset_part), preset1);
-        String preset2 = "55555";
+
+        String[] values2 = EBookPart.getListFragment(bookMark);
+        bundle.putStringArray(getResources().getString(R.string.string_picker_dialog_fragment), values2);
+
+        String preset2 = Integer.toString(bookMark.getNumFragment());
         bundle.putString(getResources().getString(R.string.string_picker_dialog_preset_fragment), preset2);
-        DialogFragment dialogPartPicker = new DialogPartPickerTest();
+
+        DialogFragment dialogPartPicker = new DialogPartPicker();
         dialogPartPicker.setArguments(bundle);
         dialogPartPicker.show(getSupportFragmentManager(),"dialogPartPicker");
     }
@@ -269,6 +281,27 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(String strPart, String strFragment) {
+        BookMark bookMark = EBookPart.getBookMarkByStr(strPart, strFragment);
+        setPartBookTransaction(bookMark, true, false);
+    }
 
+    @Override
+    public void onChangeOfDataOfPicker(StringPicker stringPicker, String strCurrValue) {
+        if (stringPicker.getId() == R.id.part_picker) {
+            int itemPart = EBookPart.getNumPartByStr(strCurrValue);
+            if (itemPart != -1) {
+                String[] strFragments = EBookPart.getListFragment(new BookMark(itemPart, 1));
+//                String mStr="";
+//                for (String iStr: strFragments
+//                     ) {
+//                    mStr += iStr+"\n";
+//                }
+//            Toast.makeText(this, mStr, Toast.LENGTH_SHORT).show();
+                if (strFragments.length>0) {
+                    DialogPartPicker dialogPartPicker = (DialogPartPicker) getSupportFragmentManager().findFragmentByTag("dialogPartPicker");
+                    dialogPartPicker.setNewListFragments(strFragments);
+                }
+            }
+        }
     }
 }

@@ -9,17 +9,17 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
     >
-        <com.cezia.bridgetoknowledge.StringPicker
+        <com.cezia.bridgetoknowledge.dialogs.StringPicker
                 android:id="@+id/part_picker"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        <com.cezia.bridgetoknowledge.StringPicker
+                android:layout_height="wrap_content"
+        />
+        <com.cezia.bridgetoknowledge.dialogs.StringPicker
                 android:id="@+id/fragment_picker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10px"
         />
-
     </LinearLayout>
 
 </RelativeLayout>

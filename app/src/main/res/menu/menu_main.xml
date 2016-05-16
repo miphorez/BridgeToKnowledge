@@ -13,8 +13,9 @@
 
     <item android:id="@+id/action_goto_part"
           android:title="@string/action_goto_part"
-          android:orderInCategory="77"
-          app:showAsAction="never"
+          android:icon="@drawable/ic_goto_part_white_48"
+          android:orderInCategory="7"
+          app:showAsAction="ifRoom"
     />
 
     <item android:id="@+id/action_shrift_up"

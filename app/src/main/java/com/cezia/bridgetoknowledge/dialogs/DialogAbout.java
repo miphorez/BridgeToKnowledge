@@ -1,4 +1,4 @@
-package com.cezia.bridgetoknowledge;
+package com.cezia.bridgetoknowledge.dialogs;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -7,10 +7,11 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
+import com.cezia.bridgetoknowledge.R;
 
-class DialogAbout {
+public class DialogAbout {
 
-    DialogAbout(Activity activity) {
+    public DialogAbout(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(R.string.dialog_about);
         builder.setView(inflateActivityAbout(activity));

@@ -1,27 +1,39 @@
-package com.cezia.bridgetoknowledge;
+package com.cezia.bridgetoknowledge.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-        import android.view.View;
+import android.util.AttributeSet;
+import android.util.Xml;
+import android.view.View;
+import com.cezia.bridgetoknowledge.R;
+import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Objects;
 
-public class DialogPartPickerTest extends DialogFragment {
+public class DialogPartPicker extends DialogFragment {
     private OnClickListener mListener;
+    private View itemView;
+    StringPicker pickerPart;
+    StringPicker pickerFragment;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_part_picker, null);
+        itemView = getActivity().getLayoutInflater().inflate(R.layout.dialog_part_picker, null);
+        mListener = (OnClickListener) getActivity();
 
-        final StringPicker pickerPart = (StringPicker) view.findViewById(R.id.part_picker);
-        final StringPicker pickerFragment = (StringPicker) view.findViewById(R.id.fragment_picker);
-        final Bundle params = getArguments();
+        pickerPart = (StringPicker) itemView.findViewById(R.id.part_picker);
+        pickerFragment = (StringPicker) itemView.findViewById(R.id.fragment_picker);
+        Bundle params = getArguments();
         if (params == null) {
             throw new RuntimeException("params is null!");
         }
@@ -30,6 +42,7 @@ public class DialogPartPickerTest extends DialogFragment {
         final String preset1 = params.getString(getStringResource(R.string.string_picker_dialog_preset_part));
         pickerPart.setValues(values1);
         if (preset1 != "") pickerPart.setCurrent(getItemValues(values1, preset1));
+        pickerPart.setListener();
 
         final String[] values2 = params.getStringArray(getStringResource(R.string.string_picker_dialog_fragment));
         final String preset2 = params.getString(getStringResource(R.string.string_picker_dialog_preset_fragment));
@@ -38,7 +51,7 @@ public class DialogPartPickerTest extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
         builder.setTitle(R.string.string_picker_dialog_title);
-        builder.setView(view);
+        builder.setView(itemView);
         builder.setPositiveButton(R.string.string_picker_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -47,6 +60,17 @@ public class DialogPartPickerTest extends DialogFragment {
         });
         builder.setNegativeButton(R.string.string_picker_dialog_cancel, null);
         return builder.create();
+    }
+
+    public void setNewListFragments(String[] values) {
+            StringPicker pickerFragment = (StringPicker) itemView.findViewById(R.id.fragment_picker);
+            pickerFragment.setValues(values);
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//            }
+//        }, 10);
     }
 
     private int getItemValues(String[] values, String preset) {
