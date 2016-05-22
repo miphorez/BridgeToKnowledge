@@ -1,66 +1,15 @@
 package com.cezia.bridgetoknowledge.dialogs;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.util.AttributeSet;
-import android.util.Xml;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import com.cezia.bridgetoknowledge.R;
-import org.xmlpull.v1.XmlPullParser;
-
-import java.util.Objects;
 
 public class DialogPartPicker extends DialogFragment {
-    private OnClickListener mListener;
-    private View itemView;
-    StringPicker pickerPart;
-    StringPicker pickerFragment;
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        itemView = getActivity().getLayoutInflater().inflate(R.layout.dialog_part_picker, null);
-        mListener = (OnClickListener) getActivity();
-
-        pickerPart = (StringPicker) itemView.findViewById(R.id.part_picker);
-        pickerFragment = (StringPicker) itemView.findViewById(R.id.fragment_picker);
-        Bundle params = getArguments();
-        if (params == null) {
-            throw new RuntimeException("params is null!");
-        }
-
-        final String[] values1 = params.getStringArray(getStringResource(R.string.string_picker_dialog_part));
-        final String preset1 = params.getString(getStringResource(R.string.string_picker_dialog_preset_part));
-        pickerPart.setValues(values1);
-        if (preset1 != "") pickerPart.setCurrent(getItemValues(values1, preset1));
-        pickerPart.setListener();
-
-        final String[] values2 = params.getStringArray(getStringResource(R.string.string_picker_dialog_fragment));
-        final String preset2 = params.getString(getStringResource(R.string.string_picker_dialog_preset_fragment));
-        pickerFragment.setValues(values2);
-        if (preset2 != "") pickerFragment.setCurrent(getItemValues(values2, preset2));
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(R.string.string_picker_dialog_title);
-        builder.setView(itemView);
-        builder.setPositiveButton(R.string.string_picker_dialog_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mListener.onClick(pickerPart.getCurrentValue(), pickerFragment.getCurrentValue());
-            }
-        });
-        builder.setNegativeButton(R.string.string_picker_dialog_cancel, null);
-        return builder.create();
-    }
+    private OnClickDialogPartListener mListener;
+    BookPickerFragment bookPickerFragment;
 
     public static DialogPartPicker newInstance(Bundle bundle) {
         DialogPartPicker dialogPartPicker = new DialogPartPicker();
@@ -68,9 +17,74 @@ public class DialogPartPicker extends DialogFragment {
         return dialogPartPicker;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        mListener = (OnClickDialogPartListener) getActivity();
+
+        getDialog().setTitle(R.string.string_picker_dialog_title);
+
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_part_picker, null);
+        bookPickerFragment = new BookPickerFragment();
+        bookPickerFragment.setArguments(getArguments());
+        getChildFragmentManager().beginTransaction().add(R.id.fragment_part_picker, bookPickerFragment).commit();
+
+//        int textViewId = getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+//        TextView tv = (TextView) view.findViewById(textViewId);
+//        colorTitle = tv.getCurrentTextColor();
+
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+//        builder.setTitle(R.string.string_picker_dialog_title);
+//        builder.setView(view);
+//        builder.setPositiveButton(R.string.string_picker_dialog_ok, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                mListener.onClick(pickerPart.getCurrentValue(), pickerFragment.getCurrentValue());
+//            }
+//        });
+//        builder.setNegativeButton(R.string.string_picker_dialog_cancel, null);
+//        builder.create();
+
+        Button button = (Button)view.findViewById(R.id.button_negative);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        button = (Button)view.findViewById(R.id.button_positive);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClick(bookPickerFragment.getPickerPart().getCurrentValue(),
+                        bookPickerFragment.getPickerFragment().getCurrentValue());
+                dismiss();
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        View view = getView();
+        if (view != null) {
+            Button btn = (Button) view.findViewById(R.id.button_positive);
+            btn.setTextColor(getContext().getResources().getColor(R.color.colorTitleBlueLight));
+            btn = (Button) view.findViewById(R.id.button_negative);
+            btn.setTextColor(getContext().getResources().getColor(R.color.colorTitleBlueLight));
+        }
+    }
+
     public void setNewListFragments(String[] values) {
-            StringPicker pickerFragment = (StringPicker) itemView.findViewById(R.id.fragment_picker);
-            pickerFragment.setValues(values);
+//            StringPicker pickerFragment = (StringPicker) itemView.findViewById(R.id.fragment_picker);
+//            pickerFragment.setValues(values);
 //        final Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
 //            @Override
@@ -79,24 +93,7 @@ public class DialogPartPicker extends DialogFragment {
 //        }, 10);
     }
 
-    private int getItemValues(String[] values, String preset) {
-        int itemValues = -1;
-        for (String iStr : values) {
-            itemValues++;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (Objects.equals(iStr, preset)) break;
-            } else {
-                if (iStr == preset) break;
-            }
-        }
-        return itemValues;
-    }
-
-    private String getStringResource(int idRes){
-        return getActivity().getResources().getString(idRes);
-    }
-
-    public interface OnClickListener {
+    public interface OnClickDialogPartListener {
         void onClick(final String strPart, final String strFragment);
     }
 

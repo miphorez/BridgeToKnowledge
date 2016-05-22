@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ShareActionProvider;
@@ -16,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import com.cezia.bridgetoknowledge.dialogs.DialogAbout;
 import com.cezia.bridgetoknowledge.dialogs.DialogPartPicker;
 import com.cezia.bridgetoknowledge.dialogs.StringPicker;
@@ -24,7 +24,7 @@ import com.cezia.bridgetoknowledge.dialogs.StringPicker;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         BookPartFragment.ChangeBookPartListener,
-        DialogPartPicker.OnClickListener,
+        DialogPartPicker.OnClickDialogPartListener,
         StringPicker.OnChangeOfDataOfPicker
 {
 
@@ -263,17 +263,21 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void goToDialogPart() {
-
         BookPartFragment partFragment = (BookPartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_book_container);
         BookMark bookMark = partFragment.getBookMark();
-        Bundle bundle = crateBundle(bookMark);
+        Bundle bundle = createBundle(bookMark);
 
-        DialogFragment dialogPartPicker = new DialogPartPicker();
-        dialogPartPicker.setArguments(bundle);
+        FragmentTransaction fragmentTransactiont = getSupportFragmentManager().beginTransaction();
+        android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("dialogPartPicker");
+        if (prev != null) {
+            fragmentTransactiont.remove(prev);
+        }
+        fragmentTransactiont.addToBackStack(null);
+        DialogFragment dialogPartPicker = DialogPartPicker.newInstance(bundle);
         dialogPartPicker.show(getSupportFragmentManager(),"dialogPartPicker");
     }
 
-    private Bundle crateBundle(BookMark bookMark) {
+    private Bundle createBundle(BookMark bookMark) {
         Bundle bundle = new Bundle();
 
         String[] values1 = EBookPart.getListParts(getApplicationContext());
@@ -292,45 +296,45 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onChangeOfDataOfPicker(StringPicker stringPicker, String strCurrValue) {
-        if (stringPicker.getId() == R.id.part_picker) {
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            DialogPartPicker oldDialog = (DialogPartPicker) getSupportFragmentManager().
-                    findFragmentByTag("dialogPartPicker");
-//            transaction.addToBackStack(null);
-
-            BookMark bookMark = new BookMark(EBookPart.getNumPartByStr(strCurrValue), 1);
-            Bundle bundle = crateBundle(bookMark);
-
-            DialogFragment dialogPartPicker = new DialogPartPicker();
-            dialogPartPicker.setArguments(bundle);
-//            transaction.replace(R.id.dialog_part_picker_container, dialogPartPicker);
-//            transaction.commit();
-            dialogPartPicker.show(transaction,"dialogPartPicker");
-
-            if (oldDialog != null) {
-                transaction.remove(oldDialog);
-            }
-//            DialogPartPicker dialogPartPicker = DialogPartPicker.newInstance(bundle);
-//            dialogPartPicker.show(getSupportFragmentManager().beginTransaction(), "dialogPartPicker");
-
-//            Toast.makeText(this, Integer.toString(bookMark.getNumPart())+" - "+
-//                    Integer.toString(bookMark.getNumFragment()), Toast.LENGTH_SHORT).show();
-
-
-//            int itemPart = EBookPart.getNumPartByStr(strCurrValue);
-//            if (itemPart != -1) {
-//                String[] strFragments = EBookPart.getListFragment(new BookMark(itemPart, 1));
-////                String mStr="";
-////                for (String iStr: strFragments
-////                     ) {
-////                    mStr += iStr+"\n";
-////                }
-////            Toast.makeText(this, mStr, Toast.LENGTH_SHORT).show();
-//                if (strFragments.length>0) {
-//                    DialogPartPicker dialogPartPicker = (DialogPartPicker) getSupportFragmentManager().findFragmentByTag("dialogPartPicker");
-//                    dialogPartPicker.setNewListFragments(strFragments);
-//                }
+//        if (stringPicker.getId() == R.id.part_picker) {
+//            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            DialogPartPicker oldDialog = (DialogPartPicker) getSupportFragmentManager().
+//                    findFragmentByTag("dialogPartPicker");
+////            transaction.addToBackStack(null);
+//
+//            BookMark bookMark = new BookMark(EBookPart.getNumPartByStr(strCurrValue), 1);
+//            Bundle bundle = createBundle(bookMark);
+//
+//            DialogFragment dialogPartPicker = new DialogPartPicker();
+//            dialogPartPicker.setArguments(bundle);
+////            transaction.replace(R.id.dialog_part_picker_container, dialogPartPicker);
+////            transaction.commit();
+//            dialogPartPicker.show(transaction,"dialogPartPicker");
+//
+//            if (oldDialog != null) {
+//                transaction.remove(oldDialog);
 //            }
-        }
+////            DialogPartPicker dialogPartPicker = DialogPartPicker.newInstance(bundle);
+////            dialogPartPicker.show(getSupportFragmentManager().beginTransaction(), "dialogPartPicker");
+//
+////            Toast.makeText(this, Integer.toString(bookMark.getNumPart())+" - "+
+////                    Integer.toString(bookMark.getNumFragment()), Toast.LENGTH_SHORT).show();
+//
+//
+////            int itemPart = EBookPart.getNumPartByStr(strCurrValue);
+////            if (itemPart != -1) {
+////                String[] strFragments = EBookPart.getListFragment(new BookMark(itemPart, 1));
+//////                String mStr="";
+//////                for (String iStr: strFragments
+//////                     ) {
+//////                    mStr += iStr+"\n";
+//////                }
+//////            Toast.makeText(this, mStr, Toast.LENGTH_SHORT).show();
+////                if (strFragments.length>0) {
+////                    DialogPartPicker dialogPartPicker = (DialogPartPicker) getSupportFragmentManager().findFragmentByTag("dialogPartPicker");
+////                    dialogPartPicker.setNewListFragments(strFragments);
+////                }
+////            }
+//        }
     }
 }

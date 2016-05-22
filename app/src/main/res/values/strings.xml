@@ -27,8 +27,8 @@
     <string name="string_picker_dialog_preset_part">STRING_PICKER_DIALOG_PRESET_PART</string>
     <string name="string_picker_dialog_preset_fragment">STRING_PICKER_DIALOG_PRESET_FRAGMENT</string>
     <string name="string_picker_dialog_title">Выбрать фрагмент текста</string>
-    <string name="string_picker_dialog_ok">Перейти</string>
-    <string name="string_picker_dialog_cancel">Отменить</string>
+    <string name="dialog_picker_positive">Перейти</string>
+    <string name="dialog_picker_negative">Отменить</string>
 
     <string name="app_description">
         Приложение "Мост к Знанию" представляет собой электронную книгу-сборник
