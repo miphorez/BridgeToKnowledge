@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
-enum EBookPart {
+public enum EBookPart {
     PART0_001(0, 0, "Предисловие", 1),
     PART1_001(1, 1, "Глава 1", 1),
     PART1_013(2, 1, "Глава 1", 13),

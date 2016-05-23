@@ -10,6 +10,8 @@ import com.cezia.bridgetoknowledge.R;
 
 import java.util.Objects;
 
+import static com.cezia.bridgetoknowledge.R.id.fragment_picker;
+
 public class BookPickerFragment extends Fragment {
     public BookPickerFragment() {
     }
@@ -21,18 +23,7 @@ public class BookPickerFragment extends Fragment {
         return view;
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        StringPicker pickerPart = getPicker(R.id.part_picker);
-//        if (pickerPart != null) {
-//        }
-//        StringPicker pickerFragment = getPicker(R.id.fragment_picker);
-//        if (pickerFragment != null) {
-//        }
-//    }
-
-    public void setPickersByBundle(View view, Bundle params) {
+    private void setPickersByBundle(View view, Bundle params) {
         final String[] values1 = params.getStringArray(getContext().getResources().getString(R.string.string_picker_dialog_part));
         final String preset1 = params.getString(getContext().getResources().getString(R.string.string_picker_dialog_preset_part));
         StringPicker pickerPart = (StringPicker)view.findViewById(R.id.part_picker);
@@ -44,7 +35,7 @@ public class BookPickerFragment extends Fragment {
 
         final String[] values2 = params.getStringArray(getContext().getResources().getString(R.string.string_picker_dialog_fragment));
         final String preset2 = params.getString(getContext().getResources().getString(R.string.string_picker_dialog_preset_fragment));
-        StringPicker pickerFragment = (StringPicker)view.findViewById(R.id.fragment_picker);
+        StringPicker pickerFragment = (StringPicker)view.findViewById(fragment_picker);
         if (pickerFragment != null) {
             pickerFragment.setValues(values2);
         }
@@ -64,12 +55,12 @@ public class BookPickerFragment extends Fragment {
         return itemValues;
     }
 
-    public StringPicker getPickerPart() {
+    StringPicker getPickerPart() {
         return getPicker(R.id.part_picker);
     }
 
-    public StringPicker getPickerFragment() {
-        return getPicker(R.id.fragment_picker);
+    StringPicker getPickerFragment() {
+        return getPicker(fragment_picker);
     }
 
     private StringPicker getPicker(int id) {

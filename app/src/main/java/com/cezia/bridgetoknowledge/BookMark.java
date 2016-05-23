@@ -1,12 +1,12 @@
 package com.cezia.bridgetoknowledge;
 
-class BookMark {
+public class BookMark {
     private int numPart;
     private int numFragment;
     private int positionScrollY;
     private int positionScrollX;
 
-    BookMark() {
+    public BookMark() {
         clearBookMark();
     }
 
@@ -29,19 +29,19 @@ class BookMark {
         positionScrollY = 0;
     }
 
-    int getNumPart() {
+    public int getNumPart() {
         return numPart;
     }
 
-    void setNumPart(int numPart) {
+    public void setNumPart(int numPart) {
         this.numPart = numPart;
     }
 
-    int getNumFragment() {
+    public int getNumFragment() {
         return numFragment;
     }
 
-    void setNumFragment(int numFragment) {
+    public void setNumFragment(int numFragment) {
         this.numFragment = numFragment;
     }
 

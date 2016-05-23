@@ -162,7 +162,7 @@ public class StringPicker extends LinearLayout {
         }, delayMs);
     }
 
-    private static boolean isUnderHoneyComb() {
+    public static boolean isUnderHoneyComb() {
         return SDK_VERSION < Build.VERSION_CODES.HONEYCOMB;
     }
 
